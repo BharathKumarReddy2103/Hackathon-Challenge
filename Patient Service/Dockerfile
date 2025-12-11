@@ -7,7 +7,11 @@ WORKDIR /app
 COPY package.json package-lock.json* ./
 
 # deterministic, minimal install (production only)
-RUN npm ci --only=production --prefer-offline --no-audit --no-fund
+RUN if [ -f package-lock.json ]; then \
+      npm ci --only=production --prefer-offline --no-audit --no-fund; \
+    else \
+      npm install --production --no-audit --no-fund; \
+    fi
 
 # copy source
 COPY . .
